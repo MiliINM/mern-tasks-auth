@@ -1,3 +1,4 @@
+// client/src/pages/TaskFormPage.jsx
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
@@ -6,6 +7,7 @@ import { Button, Card, Input, Label } from "../components/ui";
 import { useTasks } from "../context/tasksContext";
 import { Textarea } from "../components/ui/Textarea";
 import { useForm } from "react-hook-form";
+import { TaskManager } from "../components/TaskManager";
 dayjs.extend(utc);
 
 export function TaskFormPage() {
@@ -22,21 +24,20 @@ export function TaskFormPage() {
   const onSubmit = async (data) => {
     try {
       if (params.id) {
-        updateTask(params.id, {
+        await updateTask(params.id, {
           ...data,
           date: dayjs.utc(data.date).format(),
         });
       } else {
-        createTask({
+        await createTask({
           ...data,
           date: dayjs.utc(data.date).format(),
         });
       }
 
-      // navigate("/tasks");
+      navigate("/tasks");
     } catch (error) {
       console.log(error);
-      // window.location.href = "/";
     }
   };
 
@@ -57,33 +58,56 @@ export function TaskFormPage() {
   }, []);
 
   return (
-    <Card>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Label htmlFor="title">Title</Label>
-        <Input
-          type="text"
-          name="title"
-          placeholder="Title"
-          {...register("title")}
-          autoFocus
-        />
-        {errors.title && (
-          <p className="text-red-500 text-xs italic">Please enter a title.</p>
-        )}
+    <TaskManager>
+      <Card className="bg-zinc-900 p-6 border border-pink-500/30">
+        <h2 className="text-2xl font-bold text-white mb-4 font-['Orbitron']">
+          {params.id ? "Edit Task" : "Create New Task"}
+        </h2>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="mb-4">
+            <Label htmlFor="title" className="text-pink-300">Task Title</Label>
+            <Input
+              type="text"
+              name="title"
+              placeholder="Title"
+              {...register("title", { required: true })}
+              autoFocus
+              className="bg-zinc-800 border-pink-500/30 focus:border-pink-500 focus:ring-pink-500"
+            />
+            {errors.title && (
+              <p className="text-pink-500 text-xs italic mt-1">Please enter a title.</p>
+            )}
+          </div>
 
-        <Label htmlFor="description">Description</Label>
-        <Textarea
-          name="description"
-          id="description"
-          rows="3"
-          placeholder="Description"
-          {...register("description")}
-        ></Textarea>
+          <div className="mb-4">
+            <Label htmlFor="description" className="text-pink-300">Description</Label>
+            <Textarea
+              name="description"
+              id="description"
+              rows="3"
+              placeholder="Description"
+              {...register("description")}
+              className="bg-zinc-800 border-pink-500/30 focus:border-pink-500 focus:ring-pink-500"
+            ></Textarea>
+          </div>
 
-        <Label htmlFor="date">Date</Label>
-        <Input type="date" name="date" {...register("date")} />
-        <Button>Save</Button>
-      </form>
-    </Card>
+          <div className="mb-6">
+            <Label htmlFor="date" className="text-pink-300">Due Date</Label>
+            <Input 
+              type="date" 
+              name="date" 
+              {...register("date")} 
+              className="bg-zinc-800 border-pink-500/30 focus:border-pink-500 focus:ring-pink-500"
+            />
+          </div>
+          
+          <Button className="bg-pink-600 hover:bg-pink-700 text-white w-full py-2">
+            {params.id ? "Update Task" : "Create Task"}
+          </Button>
+        </form>
+      </Card>
+    </TaskManager>
   );
 }
+
+export default TaskFormPage;

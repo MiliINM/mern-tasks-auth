@@ -1,21 +1,22 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Navbar } from "./components/Navbar";
-import { AuthProvider } from "./context/authContext";
-import { ProtectedRoute } from "./routes";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/authContext';
+import { TaskProvider } from './context/tasksContext';
+import { Navbar } from './components/Navbar';
+import { ProtectedRoute } from './routes';
 
-import HomePage from "./pages/HomePage";
-import RegisterPage from "./pages/RegisterPage";
-import { TaskFormPage } from "./pages/TaskFormPage";
-import { LoginPage } from "./pages/LoginPage";
-import { TasksPage } from "./pages/TasksPage";
-import { TaskProvider } from "./context/tasksContext";
+import HomePage from './pages/HomePage';
+import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/LoginPage.jsx';
+import TasksPage from './pages/TasksPage';
+import { TaskFormPage } from './pages/TaskFormPage';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
-    <AuthProvider>
-      <TaskProvider>
-        <BrowserRouter>
-          <main className="container content-container mx-auto px-10 md:px-0">
+    <BrowserRouter>
+      <AuthProvider>
+        <TaskProvider>
+          <main className="container mx-auto px-10">
             <Navbar />
             <Routes>
               <Route path="/" element={<HomePage />} />
@@ -25,13 +26,13 @@ function App() {
                 <Route path="/tasks" element={<TasksPage />} />
                 <Route path="/add-task" element={<TaskFormPage />} />
                 <Route path="/tasks/:id" element={<TaskFormPage />} />
-                <Route path="/profile" element={<h1>Profile</h1>} />
+                <Route path="/profile" element={<ProfilePage />} />
               </Route>
             </Routes>
           </main>
-        </BrowserRouter>
-      </TaskProvider>
-    </AuthProvider>
+        </TaskProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

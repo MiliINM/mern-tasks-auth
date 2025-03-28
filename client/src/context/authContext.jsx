@@ -1,6 +1,12 @@
+// client/src/context/authContext.jsx
 import { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
-import { loginRequest, registerRequest, verifyTokenRequest } from "../api/auth";
+import { 
+  loginRequest, 
+  registerRequest, 
+  verifyTokenRequest,
+  updateProfileRequest // Move this import to the top
+} from "../api/auth";
 import Cookies from "js-cookie";
 
 const AuthContext = createContext();
@@ -45,9 +51,11 @@ export const AuthProvider = ({ children }) => {
       const res = await loginRequest(user);
       setUser(res.data);
       setIsAuthenticated(true);
+      return res;
     } catch (error) {
       console.log(error);
-      // setErrors(error.response.data.message);
+      setErrors(error.response?.data?.message || ["Error al iniciar sesión"]);
+      throw error;
     }
   };
 
@@ -55,6 +63,17 @@ export const AuthProvider = ({ children }) => {
     Cookies.remove("token");
     setUser(null);
     setIsAuthenticated(false);
+  };
+
+  const updateProfile = async (userData) => {
+    try {
+      const res = await updateProfileRequest(userData);
+      setUser(res.data);
+      return res;
+    } catch (error) {
+      setErrors(error.response?.data?.message || ["Error updating profile"]);
+      throw error;
+    }
   };
 
   useEffect(() => {
@@ -88,6 +107,7 @@ export const AuthProvider = ({ children }) => {
         signup,
         signin,
         logout,
+        updateProfile,
         isAuthenticated,
         errors,
         loading,

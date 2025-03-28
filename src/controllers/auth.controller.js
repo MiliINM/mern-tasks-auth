@@ -3,6 +3,42 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { TOKEN_SECRET } from "../config.js";
 import { createAccessToken } from "../libs/jwt.js";
+import {enviarMailVerificacion} from "../services/mail.service.js"
+
+
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { username, email } = req.body;
+    
+    // Check if email is already in use by another user
+    const existingUser = await User.findOne({ email, _id: { $ne: req.user.id } });
+    if (existingUser) {
+      return res.status(400).json({
+        message: ["The email is already in use by another account"],
+      });
+    }
+    
+    // Update the user
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      { username, email },
+      { new: true }
+    );
+    
+    // Remove password from response
+    const userWithoutPassword = {
+      id: updatedUser._id,
+      username: updatedUser.username,
+      email: updatedUser.email,
+    };
+    
+    return res.json(userWithoutPassword);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 
 export const register = async (req, res) => {
   try {
@@ -17,6 +53,16 @@ export const register = async (req, res) => {
 
     // hashing the password
     const passwordHash = await bcrypt.hash(password, 10);
+
+
+
+    //Enviar mail de confirmación de registro
+
+    const mail = await enviarMailVerificacion(email, "TOKEN DE PRUEBA")
+
+
+
+
 
     // creating the user
     const newUser = new User({
