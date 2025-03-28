@@ -1,49 +1,42 @@
-📌 Flujo de Autenticación
-Los usuarios pueden registrarse o iniciar sesión a través de los formularios correspondientes.
+# MERN Stack CRUD with JWT Authentication
 
-Los datos ingresados en los formularios se validan utilizando esquemas de Zod.
+This is a web application built using the MERN stack (MongoDB, Express, React, Node.js) with JWT-based authentication. The authentication flow ensures secure user login and registration, token management, and protected routes.
 
-Si la autenticación es exitosa:
+## 📌 Authentication Flow
 
-El servidor genera un token JWT.
+- Users can sign up or log in via dedicated forms.
+- Form data is validated using Zod schemas.
+- Upon successful authentication:
+  - The server generates a JWT token.
+  - The token is stored in an HTTP-only cookie for enhanced security.
+  - User data is stored in the authentication context.
+  - Protected routes check authentication status before granting access.
+  - The token is automatically verified when the app loads.
+  - Users can update their profile or log out at any time.
 
-El token se almacena en una cookie HTTP-only para mayor seguridad.
+## 🛠️ Technologies Used
 
-Los datos del usuario se guardan en el contexto de autenticación.
-
-Las rutas protegidas verifican el estado de autenticación antes de permitir el acceso.
-
-Al cargar la aplicación, el token se verifica automáticamente.
-
-Los usuarios pueden actualizar su perfil o cerrar sesión en cualquier momento.
-
-🛠️ Tecnologías Utilizadas
-JWT (JSON Web Tokens) → Autenticación sin estado.
-
-Cookies HTTP-only → Almacenamiento seguro del token.
-
-Zod → Validación de datos en formularios.
-
-React Context → Gestión del estado global de autenticación.
-
-React Router → Protección de rutas y control de acceso.
-
+- **JWT (JSON Web Tokens)** → Stateless authentication.
+- **HTTP-only Cookies** → Secure token storage.
+- **Zod** → Schema validation for form data.
+- **React Context** → Global state management for authentication.
+- **React Router** → Route protection and access control.
 
 ### MERN Stack CRUD with JWT
 
 This is a web application project using React, with a Nodejs Backend using Express and Mongodb as Database (MERN Stack)
 
-### Installation with docker-compose (Recommended)
+## 🚀 Installation with Docker-Compose (Recommended)
 
 ```sh
 docker-compose up -d
 npm run dev
-```
+
 
 ### Deployment
 
 ```sh
-git clone 
+git clone https://github.com/MiliINM/mern-tasks-auth.git
 cd mern-tasks-auth
 npm i
 npm run build
